@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block title %}Search Produce{% endblock %}
+
+{% block content %}
+<h2>Search Produce</h2>
+<form method="POST" class="row g-3 mb-4" novalidate>
+    {{ form.hidden_tag() }}
+    <div class="col-md-4">
+        {{ form.category.label(class="form-label") }}
+        {{ form.category(class="form-select") }}
+        {% for error in form.category.errors %}
+            <div class="text-danger">{{ error }}</div>
+        {% endfor %}
+    </div>
+    <div class="col-md-4">
+        {{ form.county.label(class="form-label") }}
+        {{ form.county(class="form-select") }}
+        {% for error in form.county.errors %}
+            <div class="text-danger">{{ error }}</div>
+        {% endfor %}
+    </div>
+    <div class="col-md-4 d-flex align-items-end">
+        <button type="submit" class="btn btn-primary w-100">{{ form.submit.label.text }}</button>
+    </div>
+</form>
+
+{% if results %}
+<div class="row row-cols-1 row-cols-md-2 g-3">
+    {% for produce in results %}
+    <div class="col">
+        <div class="card h-100">
+            <div class="card-body" style="background-color:#e3f2fd;">
+                <h5 class="card-title text-primary">{{ produce.crop_name }}</h5>
+                <p class="card-text">
+                    <strong>Quantity:</strong> {{ produce.quantity }} kg<br />
+                    <strong>Price:</strong> Ksh {{ "%.2f"|format(produce.price) }}<br />
+                    <strong>Location:</strong> {{ produce.location }}<br />
+                    <strong>Farmer:</strong> {{ produce.farmer.username }}
+                </p>
+                <a href="{{ url_for('buyer.message', produce_id=produce.id) }}" class="btn btn-primary">Contact Farmer</a>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% elif request.method == 'POST' %}
+<p>No produce found matching your criteria.</p>
+{% endif %}
+{% endblock %}

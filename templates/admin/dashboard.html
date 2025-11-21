@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block title %}Admin Dashboard{% endblock %}
+
+{% block content %}
+<h2>Unapproved Produce Listings</h2>
+{% if listings %}
+<table class="table table-hover table-bordered">
+    <thead class="table-danger">
+        <tr>
+            <th>Crop Name</th>
+            <th>Quantity (kg)</th>
+            <th>Price (Ksh)</th>
+            <th>Location</th>
+            <th>Category</th>
+            <th>County</th>
+            <th>Farmer</th>
+            <th>Listed On</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for p in listings %}
+        <tr>
+            <td>{{ p.crop_name }}</td>
+            <td>{{ p.quantity }}</td>
+            <td>{{ "%.2f"|format(p.price) }}</td>
+            <td>{{ p.location }}</td>
+            <td>{{ p.category.replace('_', ' ').title() }}</td>
+            <td>{{ p.county }}</td>
+            <td>{{ farmers[p.farmer_id].username if p.farmer_id in farmers else 'Unknown' }}</td>
+            <td>{{ p.timestamp.strftime('%Y-%m-%d %H:%M') }}</td>
+            <td>
+                <form method="POST" action="{{ url_for('admin.approve', produce_id=p.id) }}" onsubmit="return confirm('Approve this produce listing?');">
+                    <button type="submit" class="btn btn-success btn-sm">Approve</button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<p>No unapproved produce listings at the moment.</p>
+{% endif %}
+{% endblock %}

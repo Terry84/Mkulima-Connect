@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title %}Home{% endblock %}
+
+{% block content %}
+<div class="text-center mb-4">
+    <h1>Welcome to Mkulima Connect</h1>
+    <p>Your platform to connect farmers and buyers efficiently.</p>
+    {% if not current_user.is_authenticated %}
+        <a href="{{ url_for('auth.register') }}" class="btn btn-primary me-2">Register</a>
+        <a href="{{ url_for('auth.login') }}" class="btn btn-outline-primary">Login</a>
+    {% endif %}
+</div>
+
+<h2 class="mb-3">Current Market Prices</h2>
+<div class="row row-cols-1 row-cols-md-3 g-3">
+    {% if market_prices %}
+        {% for item in market_prices %}
+        <div class="col">
+            <div class="card h-100">
+                <div class="card-body" style="background-color:#e8f5e9;">
+                    <h5 class="card-title text-success">{{ item.crop_name }}</h5>
+                    <p class="card-text fw-bold">Average Price: Ksh {{ "%.2f"|format(item.average_price) }}</p>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    {% else %}
+        <p>No market prices available at the moment.</p>
+    {% endif %}
+</div>
+{% endblock %}
