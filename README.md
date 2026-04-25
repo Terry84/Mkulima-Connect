@@ -72,6 +72,5 @@ Mkulima Connect is a web application designed to connect farmers and buyers effi
         DEBUG=True
 
 6. Initialize and upgrade the database:
-
 # Mkulima-Connect
 
